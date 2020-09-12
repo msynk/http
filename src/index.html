@@ -9,11 +9,13 @@
         .post-container {
             font-family: sans-serif;
             background-color: #eee;
-            padding:5px;
+            padding: 5px;
             margin-bottom: 10px;
         }
+
         .post-item {
-            margin-bottom: 5px;;
+            margin-bottom: 5px;
+            ;
         }
     </style>
 </head>
@@ -47,17 +49,13 @@
                 getElementById(postContainer, 'body').textContent = post.body;
                 return postContainer;
 
-                function getElementById(container, id) {
-                    return find(container, id);
+                function getElementById(element, id) {
+                    var idAttr = element.attributes['id'];
+                    if (idAttr && idAttr.value === id) return element;
 
-                    function find(element, id) {
-                        var idAttr = element.attributes['id'];
-                        if (idAttr && idAttr.value === id) return element;
-
-                        for (var i = 0; i < element.children.length; i++) {
-                            var found = find(element.children[i], id);
-                            if (found) return found;
-                        }
+                    for (var i = 0; i < element.children.length; i++) {
+                        var found = getElementById(element.children[i], id);
+                        if (found) return found;
                     }
                 }
             }
