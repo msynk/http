@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>http Test</title>
+    <style>
+        .post-container {
+            font-family: sans-serif;
+            background-color: #eee;
+            padding:5px;
+            margin-bottom: 10px;
+        }
+        .post-item {
+            margin-bottom: 5px;;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">Loading...</div>
+    <script src="http.js"></script>
+    <script>
+        http.get('https://jsonplaceholder.typicode.com/posts').then(function (res, resHeaders) {
+            var posts = [];
+            var contentType = resHeaders['content-type'];
+            if (contentType && contentType.indexOf('application/json') !== -1) {
+                posts = JSON.parse(res);
+            }
+
+            var createPostTemplate = createTemplateFactory();
+            var container = document.getElementById('container');
+            container.innerHTML = '';
+            posts.forEach(function (post) { container.appendChild(createPostTemplate(post)); });
+        });
+
+        function createTemplateFactory() {
+            var templateHtml = document.getElementById('postTemplate').innerHTML;
+            return function (post) {
+                var postContainer = document.createElement('div');
+                postContainer.className = 'post-container'
+                postContainer.innerHTML = templateHtml;
+                getElementById(postContainer, 'id').textContent = post.id;
+                getElementById(postContainer, 'userId').textContent = post.userId;
+                getElementById(postContainer, 'title').textContent = post.title;
+                getElementById(postContainer, 'body').textContent = post.body;
+                return postContainer;
+
+                function getElementById(container, id) {
+                    return find(container, id);
+
+                    function find(element, id) {
+                        var idAttr = element.attributes['id'];
+                        if (idAttr && idAttr.value === id) return element;
+
+                        for (var i = 0; i < element.children.length; i++) {
+                            var found = find(element.children[i], id);
+                            if (found) return found;
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <template id="postTemplate">
+        <div class="post-item">
+            <span>Id:</span><span id="id"></span>
+        </div>
+        <div class="post-item">
+            <span>User Id:</span><span id="userId"></span>
+        </div>
+        <div class="post-item">
+            <span>Title:</span><span id="title"></span>
+        </div>
+        <div class="post-item">
+            <span>Body:</span><span id="body"></span>
+        </div>
+    </template>
+</body>
+
+</html>
