@@ -5,18 +5,19 @@ var http = (function () {
     return {
         get: get,
         post: post,
+        send: send,
         setHeader: setHeader
     };
 
     // ==================================================================================
 
     function get(url, headers) {
-        return xhr('GET', url, null, headers);
+        return send('GET', url, null, headers);
     }
 
     function post(url, data, headers) {
         // headers = headers || [{ name: 'Content-Type', value: 'application/json' }];
-        return xhr('POST', url, data, headers);
+        return send('POST', url, data, headers);
     }
 
     function setHeader(name, value) {
@@ -30,7 +31,7 @@ var http = (function () {
 
     // ==================================================================================
 
-    function xhr(method, url, data, headers) {
+    function send(method, url, data, headers) {
         var xhr = new XMLHttpRequest();
         xhr._cbs = [];
         xhr._ers = [];
